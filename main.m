@@ -119,8 +119,7 @@ for i = 1:num_simulations
     percentage_collisions = num_collisions / sum(num_transmissions_list) * 100;
     
     %% Results processing
-    % We obtain cumulative transmission collision probability every 1 
-    % second. 
+    % We obtain cumulative transmission collision probability every 1 second. 
     
     sim_cumul_collision_prob = zeros(num_subframes_simulated/1000,1);
     c = 1;

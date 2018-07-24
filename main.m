@@ -25,10 +25,10 @@ for i = 1:num_simulations
     % Display current simulation number
     disp([num2str(i) ' simulation'])
 
-    % UEs parameters initialization (random)
+    %% UEs parameters initialization (random)
     UEs = struct('counter',{},'subframe',{},'subchannels',{});
     for UE = 1:num_vehicles
-        UEs(UE).counter = randi([1,C2]);                                        % Counter
+        UEs(UE).counter = randi([1,C2]);                                        % SL_RESOURCE_RESELECTION_COUNTER
         UEs(UE).subframe = randi([1,RRI]);                                      % First subframe where the UE transmits
         subchannel_start = randi([1,N_subch-(L_subch-1)]);
         UEs(UE).subchannels = subchannel_start:(subchannel_start+L_subch-1);    % Subchannels where the UE transmits
@@ -73,23 +73,19 @@ for i = 1:num_simulations
                 sensing{s} = vertcat(sensing{s},UEs(UE).subchannels(:));
                 num_transmissions_list(s) = num_transmissions_list(s) + 1;
 
-                % If the counter value is not zero don't trigger resource 
-                % reselection
+                % If the counter value is not zero don't trigger resource reselection
                 if UEs(UE).counter ~= 0
                     UEs(UE).subframe = s + RRI;             % Reserve subframe
                     UEs(UE).counter = UEs(UE).counter - 1;  % Update counter
-                % If the counter value is zero, consider triggering 
-                % resource reselection (depending on probResourceKeep)
+                % If the counter value is zero, consider triggering resource reselection (depending on probResourceKeep)
                 else
-                    % With probability probResourceKeep don't trigger 
-                    % resource reselection.
+                    % With probability probResourceKeep don't trigger resource reselection.
                     if rand() < probResourceKeep
                         UEs(UE).subframe = s + RRI; % Reserve subframe
-                    % With probability (1-probResourceKeep) trigger
-                    % resource reselection
+                    % With probability (1-probResourceKeep) trigger resource reselection
                     else
                         %%% Sensing-based resource reselection
-                        [subframe, subchannels] = reselection_advanced(s, sensing, T1, T2, RRI, N_subch, UEs(UE).subchannels, L_subch);
+                        [subframe, subchannels] = resource_reselection(s, sensing, T1, T2, RRI, N_subch, UEs(UE).subchannels, L_subch);
                         UEs(UE).subframe = subframe;
                         UEs(UE).subchannels = subchannels;
 

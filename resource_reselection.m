@@ -1,4 +1,4 @@
-function [ subframe, subchannels ] = reselection_advanced( s, sensing, T1, T2, RRI, num_subchannels, current_subchannels, packet_subchannels )
+function [ subframe, subchannels ] = resource_reselection( s, sensing, T1, T2, RRI, num_subchannels, current_subchannels, packet_subchannels )
 %SENSING_AND_RESELECTION Sense the air interface and select available resources for transmission of packets
 %   Return: selected subframe and subchannels
 

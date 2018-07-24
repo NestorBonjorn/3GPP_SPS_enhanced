@@ -94,4 +94,4 @@ The process above is performed for each UE that transmits in the current subfram
 
 When all the simulations are done, we calculate the cumulative transmission collision probability every 1 second of each simulation and we store it in the `sim_cumul_collision_prob` list. In this way, the first value of `sim_cumul_collision_prob` contains the average transmission collision probability in the 1st second of the simulation (i.e., along the first 1000 subframes), the second value contains the average transmission collision probability in the 2nd second of the simulation (i.e., along the first 2000 subframes). Therefore, the last value of `sim_cumul_collision_prob` contains the average transmission collision probability along all the simulation. That's why the output is 'cumulative'.
 
-Finally, we take the average of all the resulting `sim_cumul_collision_prob` outputs (one for each simulation), and we plot it. 
+Finally, we take the average of all the resulting `sim_cumul_collision_prob` outputs, and we plot it. 

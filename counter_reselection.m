@@ -1,4 +1,4 @@
-function [ counter ] = counter_reselection_advanced( counter, sensing_counter, s, RRI, C2, num_vehicles )
+function [ counter ] = counter_reselection( counter, sensing_counter, s, RRI, C2, num_vehicles )
 %COUNTER_RESELECTION Summary of this function goes here
 %   Detailed explanation goes here
 

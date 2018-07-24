@@ -64,7 +64,7 @@ for i = 1:num_simulations
                 % If we simulate our proposed approach
                 if proposal == true
                     % Perform counter reselection (if necessary)
-                    UEs(UE).counter = counter_reselection_advanced(UEs(UE).counter, sensing_counter, s, RRI, C2, num_vehicles);
+                    UEs(UE).counter = counter_reselection(UEs(UE).counter, sensing_counter, s, RRI, C2, num_vehicles);
                     % Simulate the tranmission of the UE's current counter
                     sensing_counter{s}(end+1) = UEs(UE).counter;
                 end

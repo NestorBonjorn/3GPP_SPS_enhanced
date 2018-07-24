@@ -13,7 +13,7 @@ The inputs if the simulator are the aforementioned `proposal` flag, the number o
 ## Parameters configuration
 
 ### Simulation parameters
-The simulator starts by defining a set of simulation-related parameters, such as the flag indicating whether we simulate our proposed enhancement or not, the number of simulations from which we will take the average in order to obtain the final result, and the number of subframes simulated in each simulation. We also initialize the variable that will store the different simulation results as a matrix of zeros.
+The simulator starts by defining a set of simulation-related parameters, such as the flag (`proposal`) indicating whether we simulate our proposed enhancement or not, the number of simulations (`num_simulations`) from which we will take the average in order to obtain the final result, and the number of subframes simulated in each simulation (`num_subframes_simulated`). We also initialize the variable that will store the different simulation results as a matrix of zeros (`cumul_cat`).
 
 ```matlab
 proposal = true;                                                    % Flag indicating whether we use our proposed approach or not
@@ -23,7 +23,7 @@ cumul_cat = zeros(num_subframes_simulated/1000,num_simulations);    % It will st
 ```
 
 ### General parameters
-Then, we define general parameters such as the number of vehicles that we simulate and the `probResourceKeep` which is a parameter of the standardized SPS procedure that indicates the probability to keep the resources when the counter expires, i.e., when it reaches zero.
+Then, we define general parameters such as the number of vehicles that we simulate (`num_vehicles`) and the `probResourceKeep`, which is a parameter of the standardized SPS procedure that indicates the probability to keep the resources when the counter expires, i.e., when it reaches zero.
 
 ```matlab
 num_vehicles = 10;      % Number of simulated vehicles
@@ -50,3 +50,43 @@ L_subch = 1;    % Number of subchannels that a packet occupies
 ```
 
 ## Simulation
+After that, we start the actual simulation by starting a 'for' loop that will iterate over each of the simulations. 
+
+In each simulation, we start by initializing the UEs parameters at time zero. These parameters consist of the SL_RESOURCE_RESELECTION_COUNTER value, as well as the subchannels and the first subframe where they will transmit. 
+
+```matlab
+UEs = struct('counter',{},'subframe',{},'subchannels',{});
+    for UE = 1:num_vehicles
+        UEs(UE).counter = randi([1,C2]);                                        % SL_RESOURCE_RESELECTION_COUNTER
+        UEs(UE).subframe = randi([1,RRI]);                                      % First subframe where the UE transmits
+        subchannel_start = randi([1,N_subch-(L_subch-1)]);
+        UEs(UE).subchannels = subchannel_start:(subchannel_start+L_subch-1);    % Subchannels where the UE transmits
+    end
+```
+
+Then, we start 'for' loop that will iterate over all the simulated subframes. In each subframe, we iterate over all the UEs in order to find if one or more UEs transmit in this subframe. For each UE that transmits in the current subframe, we simulate its transmission by updating the `sensing` variable, which stores the subchannels occupied in each simulated subframe. However, before that, if the `proposal` flag is set to `true`, we perform the counter reselection procedure by calling to the `counter_reselection_advanced` function, defined in the `counter_reselection_advanced.m` file. This will simulate our proposed enhancement, which consists in changing the UE's current counter value if another UE is using the same counter at the same time. In case the `proposal` flag is set to `true`, we also update the variable `sensing_counter`, which stores the counters sent in each subframe, simulating the transmission of the counters.
+
+After that, we simulate the SPS procedure logic. That is, if the current UE's counter is different than 0 the UE keeps its current resources, i.e., reserves for transmission the subframe at a distance of RRI of the current subframe, the subchannels used for transmission are not modified, and the counter value is decreased by one. If the current UE's counter is 0, the UE will trigger resource reselection with probability `probResourceKeep` and will keep its current resources with probability (1 - `probResourceKeep`). If resource reselection is triggered, the new subframe and the new subchannels where the UE will transmit are obtained from the `reselection_advanced` function, defined in the `reselection_advanced.m` file.
+
+```matlab
+% If the counter value is not zero don't trigger resource reselection
+if UEs(UE).counter ~= 0
+  UEs(UE).subframe = s + RRI;             % Reserve subframe
+  UEs(UE).counter = UEs(UE).counter - 1;  % Update counter
+% If the counter value is zero, consider triggering resource reselection (depending on probResourceKeep)
+else
+  % With probability probResourceKeep don't trigger resource reselection.
+  if rand() < probResourceKeep
+    UEs(UE).subframe = s + RRI; % Reserve subframe
+  % With probability (1-probResourceKeep) trigger resource reselection
+  else
+    %%% Sensing-based resource reselection
+    [subframe, subchannels] = reselection_advanced(s, sensing, T1, T2, RRI, N_subch, UEs(UE).subchannels, L_subch);
+    UEs(UE).subframe = subframe;
+    UEs(UE).subchannels = subchannels;
+  end
+  % Update SL_RESOURCE_RESELECTION_COUNTER
+  UEs(UE).counter = randi([C1,C2]); 
+end
+
+```

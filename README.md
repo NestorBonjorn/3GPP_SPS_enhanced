@@ -13,25 +13,18 @@ The inputs if the simulator are the aforementioned `proposal` flag, the number o
 ## Parameters configuration
 
 ### Simulation parameters
-The simulator starts by defining a set of simulation-related parameters, such as the flag (`proposal`) indicating whether we simulate our proposed enhancement or not, the number of simulations (`num_simulations`) from which we will take the average in order to obtain the final result, and the number of subframes simulated in each simulation (`num_subframes_simulated`). We also initialize the variable that will store the different simulation results as a matrix of zeros (`cumul_cat`).
+The simulator starts by defining a set of simulation-related parameters, such as the flag (`proposal`) indicating whether we simulate our proposed enhancement or not, the simulated number of vehicles (`num_vehicles`), the number of simulations (`num_simulations`) from which we will take the average in order to obtain the final result, and the number of subframes simulated in each simulation (`num_subframes_simulated`). We also initialize the variable that will store the different simulation results as a matrix of zeros (`cumul_cat`).
 
 ```matlab
 proposal = true;                                                    % Flag indicating whether we use our proposed approach or not
+num_vehicles = 10;                                                  % Number of simulated vehicles
 num_simulations = 10;                                               % Number of simulations
 num_subframes_simulated = 1000000;                                  % Number of simulated subframes per simulation
 cumul_cat = zeros(num_subframes_simulated/1000,num_simulations);    % It will store the different simulation results
 ```
 
-### General parameters
-Then, we define general parameters such as the number of vehicles that we simulate (`num_vehicles`) and the `probResourceKeep`, which is a parameter of the standardized SPS procedure that indicates the probability to keep the resources when the counter expires, i.e., when it reaches zero.
-
-```matlab
-num_vehicles = 10;      % Number of simulated vehicles
-probResourceKeep = 0.4; % Probability to keep the resources when the counter expires
-```
-
-### Temporal parameters
-Then, we define temporal parameters which basically consist of the SPS parameters. `RRI` is the time between two consecutive UE's transmissions, `T1` and `T2` define the boundaries of the resource selection window, and `C1` and `C2` define the set of counters (from C1 to C2, both inclusive) that can be chosen by a UE when its counter expires. By default, we assume a maximum latency requirement of 20 ms. For this reason, `RRI` and `T2` are set to 20 ms.
+### SPS parameters
+Then, we define the SPS parameters. `RRI` is the time between two consecutive UE's transmissions, `T1` and `T2` define the boundaries of the resource selection window, `C1` and `C2` define the set of counters (from C1 to C2, both inclusive) that can be chosen by a UE when its counter expires, and `probResourceKeep` is the probability to keep the resources also when the counter expires. By default, we assume a maximum latency requirement of 20 ms; for this reason, `RRI` and `T2` are set to 20 ms.
 
 ```matlab
 RRI = 20;   % Resource Reservation Interval in miliseconds
@@ -39,6 +32,7 @@ T1 = 2;     % Resource selection window low boundary in miliseconds
 T2 = 20;    % Resource selection window high boundary in miliseconds
 C1 = 25;    % SL_RESOURCE_RESELECTION_COUNTER low boundary
 C2 = 75;    % SL_RESOURCE_RESELECTION_COUNTER high boundary
+probResourceKeep = 0.4; % Probability to keep the resources when the counter expires
 ```
 
 ### Frequency parameters

@@ -1,7 +1,7 @@
 function [ subframe, subchannels ] = resource_reselection( s, sensing, T1, T2, RRI, num_subchannels, current_subchannels, packet_subchannels )
 %RESOURCE_RESELECTION Perform resource reselection based on spectrum
-%sensing
-%   Return: selected subframe and subchannels
+%sensing.
+%   Return: selected subframe and subchannels.
 
 subframe = 0;
 subchannels = [];

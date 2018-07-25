@@ -2,7 +2,7 @@ function [ counter ] = counter_reselection( counter, sensing_counter, s, RRI, C2
 %COUNTER_RESELECTION This function is used to perform counter reselection,
 %i.e., our proposed enhancement to the current standardized SPS approach
 %in 3GPP Release 14.
-%   Return: selected counter (it may not change)
+%   Return: selected counter (it may not change).
 
 % Flag indicating whether we consider only counters lower than the UE's
 % current counter when performing counter reselection.

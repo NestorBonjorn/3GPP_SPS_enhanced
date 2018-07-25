@@ -1,19 +1,17 @@
 %% Simulation parameters
 proposal = true;                                                    % Flag indicating whether we use our proposed approach or not
+num_vehicles = 10;                                                  % Number of simulated vehicles
 num_simulations = 10;                                               % Number of simulations
 num_subframes_simulated = 1000000;                                  % Number of simulated subframes per simulation
 cumul_cat = zeros(num_subframes_simulated/1000,num_simulations);    % It will store the different simulation results
 
-%% General parameters
-num_vehicles = 10;      % Number of simulated vehicles
-probResourceKeep = 0.4; % Probability to keep the resources when the counter expires
-
-%% Temporal parameters
+%% SPS parameters
 RRI = 20;   % Resource Reservation Interval in miliseconds
 T1 = 2;     % Resource selection window low boundary in miliseconds
 T2 = 20;    % Resource selection window high boundary in miliseconds
 C1 = 25;    % SL_RESOURCE_RESELECTION_COUNTER low boundary
 C2 = 75;    % SL_RESOURCE_RESELECTION_COUNTER high boundary
+probResourceKeep = 0.4; % Probability to keep the resources when the counter expires
 
 %% Frequency parameters
 N_subch = 1;    % Number of subchannels in the grid
@@ -84,12 +82,12 @@ for i = 1:num_simulations
                         UEs(UE).subframe = s + RRI; % Reserve subframe
                     % With probability (1-probResourceKeep) trigger resource reselection
                     else
-                        %%% Sensing-based resource reselection
+                        % Sensing-based resource reselection
                         [subframe, subchannels] = resource_reselection(s, sensing, T1, T2, RRI, N_subch, UEs(UE).subchannels, L_subch);
                         UEs(UE).subframe = subframe;
                         UEs(UE).subchannels = subchannels;
 
-                        %%% Random resource reselection
+                        % Random resource reselection
     %                     UEs(UE).subframe = s + randi([1,RRI]);
     %                     subchannel_start = randi([1,num_subchannels-(packet_subchannels-1)]);
     %                     UEs(UE).subchannels = subchannel_start:(subchannel_start+packet_subchannels-1);

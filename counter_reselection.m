@@ -1,12 +1,12 @@
 function [ counter ] = counter_reselection( counter, sensing_counter, s, RRI, C2, num_vehicles )
-%COUNTER_RESELECTION Summary of this function goes here
-%   Detailed explanation goes here
+%COUNTER_RESELECTION This function is used to perform counter reselection,
+%i.e., our proposed enhancement to the current standardized SPS approach
+%in 3GPP Release 14.
+%   Return: selected counter (it may not change)
 
+% Flag indicating whether we consider only counters lower than the UE's
+% current counter when performing counter reselection.
 lower = true;
-
-%% TODO
-% Include packet loss probability, i.e., some counters may not be
-% correctly received by the UE
 
 %% Create counters list (all the counters received in the last RRI interval)
 if (counter > 2)
@@ -21,7 +21,7 @@ if (counter > 2)
         end
     end
 
-%% Extend the counters list with neighbouring counters
+%% Extend the counters list with neighbouring counters (RX_counters - 1)
     extended_counters_list = unique(counters_list);
     iterable = extended_counters_list(:)';
     for n = iterable
@@ -48,17 +48,15 @@ if (counter > 2)
         if (length(counters_candidates) > 1)
             counter = randsample(counters_candidates, 1);
         elseif (length(counters_candidates) == 1)
-            % Choose counter candidate with probability 0.5 or keep
-            % current counter with probability 0.5
-%             if rand() > 0.5
-%                 counter = counters_candidates;
-%             end
-            
-            % Choose available counter
             counter = counters_candidates;
         else
             disp('No counter candidate: keep current counter')
         end
     end
 end
+
+
+%% TODO
+% Include packet loss probability, i.e., some counters may not be
+% correctly received by the UE
 end

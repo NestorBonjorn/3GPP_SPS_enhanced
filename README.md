@@ -8,7 +8,7 @@ This repo consists of a simulator that calculates transmission collision probabi
 
 In order to run this simulator you just need to download the source code from this repo and run the `main.m` file in MATLAB. This will generate a plot (the output of the simulator) indicating the average transmission collision probability results over time between the different simulated UEs. The simulated 'time' depends on the number of subframes simulated in each simulation (indicated by `num_subframes_simulated`), and the result is an average collision probability because we repeat the simulation several times (as defined in `num_simulations`) and we calculate the average of the different simulation results in order to obtain the final output. In each simulation, we randomly initialize the UEs configuration, i.e., the parameter values of the UEs at time zero.
 
-The inputs of the simulator are the aforementioned `proposal` flag, the number of simulated UEs (indicated by `num_vehicles`), the different SPS parameters, such as `RRI`, `T1`, `T2`, `C1`, `C2` and `probResourceKeep`, and two frequency-related parameters (`N_subch` and `L_subch`). However, you can also change the aforementioned `num_subframes_simulated` or `num_simulations`.
+The inputs of the simulator are the aforementioned `proposal` flag, the number of simulated UEs (indicated by `num_vehicles`), the different SPS parameters, such as `RRI`, `T1`, `T2`, `C1`, `C2` and `probResourceKeep`, and two frequency-related parameters (`N_subch` and `L_subch`). However, you can also change the aforementioned `num_subframes_simulated` or `num_simulations`. All these parameters are described below.
 
 ## Parameters configuration
 
@@ -74,7 +74,7 @@ else
         UEs(UE).subframe = s + RRI; % Reserve subframe
     % With probability (1-probResourceKeep) trigger resource reselection
     else
-        %%% Sensing-based resource reselection
+        % Sensing-based resource reselection
         [subframe, subchannels] = reselection_advanced(s, sensing, T1, T2, RRI, N_subch, UEs(UE).subchannels, L_subch);
         UEs(UE).subframe = subframe;
         UEs(UE).subchannels = subchannels;

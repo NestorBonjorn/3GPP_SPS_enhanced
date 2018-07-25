@@ -6,9 +6,9 @@ num_subframes_simulated = 1000000;                                  % Number of 
 cumul_cat = zeros(num_subframes_simulated/1000,num_simulations);    % It will store the different simulation results
 
 %% SPS parameters
-RRI = 20;   % Resource Reservation Interval in miliseconds
-T1 = 2;     % Resource selection window low boundary in miliseconds
-T2 = 20;    % Resource selection window high boundary in miliseconds
+RRI = 20;   % Resource Reservation Interval in milliseconds
+T1 = 2;     % Resource selection window low boundary in milliseconds
+T2 = 20;    % Resource selection window high boundary in milliseconds
 C1 = 25;    % SL_RESOURCE_RESELECTION_COUNTER low boundary
 C2 = 75;    % SL_RESOURCE_RESELECTION_COUNTER high boundary
 probResourceKeep = 0.4; % Probability to keep the resources when the counter expires
